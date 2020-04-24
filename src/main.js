@@ -206,9 +206,6 @@ const formatRoutes = (routes) => {
       name: route.name,
       nameZh: route.nameZh,
       iconCls: route.iconCls,
-      meta: {
-        requireAuth: true
-      },
       children: route.children
     }
     fmtRoutes.push(fmtRoute)

@@ -1,98 +1,159 @@
 <template>
-  <body id="paper">
-  <el-form :model="loginForm" :rules="rules" class="login-container" label-position="left"
-           label-width="0px" v-loading="loading">
+  <body id="poster">
+  <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
     <h3 class="login_title">用户注册</h3>
-    <el-form-item prop="username">
-      <el-input type="text" v-model="loginForm.username"
-                auto-complete="off" placeholder="账号"></el-input>
+    <el-form-item label="身份证号" prop="idcard">
+      <el-input v-model="ruleForm.idcard"></el-input>
     </el-form-item>
-    <el-form-item prop="password">
-      <el-input type="password" v-model="loginForm.password"
-                auto-complete="off" placeholder="密码"></el-input>
+    <el-form-item label="用户名" prop="username">
+      <el-input v-model="ruleForm.username"></el-input>
     </el-form-item>
-    <el-form-item>
-      <el-input type="text" v-model="loginForm.name"
-                auto-complete="off" placeholder="真实姓名"></el-input>
+    <el-form-item label="密码" prop="pass">
+      <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item>
-      <el-input type="text" v-model="loginForm.phone"
-                auto-complete="off" placeholder="电话号码"></el-input>
+    <el-form-item label="确认密码" prop="checkPass">
+      <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-input type="text" v-model="loginForm.email"
-                auto-complete="off" placeholder="E-Mail"></el-input>
+      <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <el-button @click="comeback">返回</el-button>
     </el-form-item>
-    <el-form-item style="width: 100%">
-      <el-button type="primary" style="width: 40%;background: #505458;border: none" v-on:click="register">注册</el-button>
-    </el-form-item>
+    <div>{{msg}}</div>
   </el-form>
   </body>
 </template>
+
 <script>
-  export default{
-    data () {
-      return {
-        rules: {
-          username: [{required: true, message: '用户名不能为空', trigger: 'blur'}],
-          password: [{required: true, message: '密码不能为空', trigger: 'blur'}]
-        },
-        checked: true,
-        loginForm: {
-          username: '',
-          password: '',
-          name: '',
-          phone: '',
-          email: ''
-        },
-        loading: false
+  export default {
+    name: 'Register',
+    data() {
+      var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('身份证号不能为空'));
+        }
+        setTimeout(() => {
+          if (value.length===0) {
+            callback(new Error('请输入身份证号'));
+          } else {
+            if (value.length !== 18) {
+              callback(new Error('输入格式有误'));
+            } else {
+              callback();
+            }
+          }
+        }, 1000);
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      var validatename=(rule,value,callback)=>{
+        if(value==='') {
+          callback(new Error('用户名不能为空'));
+        }else{
+          callback();
+        }
+
+
       }
+      return {
+        msg:'',
+        ruleForm: {
+          pass: '',
+          checkPass: '',
+          idcard: '',
+          username:'',
+        },
+
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          username:[
+            { validator:validatename,   trigger:'blur' }
+          ],
+
+          idcard: [
+            { validator: checkAge, trigger: 'blur' }
+          ]
+        }
+      };
     },
     methods: {
-      register () {
-        var _this = this
-        this.$axios
-          .post('/register', {
-            username: this.loginForm.username,
-            password: this.loginForm.password,
-            name: this.loginForm.name,
-            phone: this.loginForm.phone,
-            email: this.loginForm.email
-          })
-          .then(resp => {
-            if (resp.data.code === 200) {
-              this.$alert('注册成功', '提示', {
-                confirmButtonText: '确定'
+      add(){
+        var _this=this;
+        _this.form.push(this.ruleForm);
+      },
+
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          console.log({    //这里是发送给后台的数据
+            username: this.ruleForm.username,
+            password: this.ruleForm.pass,
+            idcard: this.ruleForm.idcard
+          });
+          if (valid) {
+            this.$axios({
+              method:'post',
+              url:'/signin',
+              data:JSON.stringify({    //这里是发送给后台的数据
+                username: this.ruleForm.username,
+                password: this.ruleForm.pass,
+                idCard: this.ruleForm.idcard
+              }),
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
+              },
+            })
+              .then(result=>{
+                this.msg = result.data;
               })
-              _this.$router.replace('/login')
-            } else {
-              this.$alert(resp.data.message, '提示', {
-                confirmButtonText: '确定'
+              .catch(err=>{
+
               })
-            }
-          })
-          .catch(failResponse => {})
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      comeback(){
+        this.$router.replace('/login')
       }
+
+
     }
   }
 </script>
-<style>
-  #paper {
-    background:url("../assets/img/bg/eva1.jpg") no-repeat;
-    background-position: center;
-    height: 100%;
-    width: 100%;
-    background-size: cover;
-    position: fixed;
-  }
-  body{
-    margin: -5px 0px;
-  }
-  .login-container {
+
+<style scoped>
+  .demo-ruleForm {
     border-radius: 15px;
     background-clip: padding-box;
     margin: 90px auto;
-    width: 350px;
+    width: 550px;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
@@ -103,8 +164,7 @@
     text-align: center;
     color: #505458;
   }
-  .login_remember {
-    margin: 0px 0px 35px 0px;
-    text-align: left;
+  body{
+    margin: 0px;
   }
 </style>

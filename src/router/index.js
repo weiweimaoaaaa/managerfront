@@ -7,6 +7,11 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '/',
+      redirect: '/login',
+
+    },
+    {
       path: '/admin/content/editor',
       name: 'Editor',
       component: () => import('../components/admin/content/ArticleEditor'),
@@ -25,6 +30,7 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: () => import('../components/admin/AdminIndex'),
+      redirect:'/admin/dashboard',
       children: [
         {
           path: '/admin/dashboard',
@@ -33,10 +39,6 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '*',
-      component: () => import('../components/pages/Error404')
-    }
   ]
 })
 
@@ -44,6 +46,11 @@ export default new Router({
 export const createRouter = routes => new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/',
+      redirect: '/login',
+
+    },
     {
       path: '/login',
       name: 'Login',
@@ -66,9 +73,5 @@ export const createRouter = routes => new Router({
         }
       ]
     },
-    {
-      path: '*',
-      component: () => import('../components/pages/Error404')
-    }
   ]
 })

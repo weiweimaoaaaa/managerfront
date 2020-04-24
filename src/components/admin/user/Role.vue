@@ -104,6 +104,7 @@
 
 <script>
   import RoleCreate from './RoleCreate'
+
   export default {
     name: 'UserRole',
     components: {RoleCreate},
