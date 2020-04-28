@@ -9,6 +9,10 @@
       <el-form :model="loginForm" :rules="rules" label-position="left"
                label-width="0px">
         <el-form-item prop="username">
+          <el-input type="text" v-model="loginForm.idCard"
+                    auto-complete="off" placeholder="账号"></el-input>
+        </el-form-item>
+        <el-form-item prop="username">
           <el-input type="text" v-model="loginForm.username"
                     auto-complete="off" placeholder="账号"></el-input>
         </el-form-item>
@@ -62,17 +66,16 @@
             password: '',
             name: '',
             phone: '',
-            email: ''
+            email: '',
+            idCard:'',
           }
         },
         register () {
           this.$axios
-            .post('/register', {
+            .post('/signin', {
               username: this.loginForm.username,
               password: this.loginForm.password,
-              name: this.loginForm.name,
-              phone: this.loginForm.phone,
-              email: this.loginForm.email
+              idCard: this.loginForm.idCard,
             })
             .then(resp => {
               if (resp.data.code === 200) {

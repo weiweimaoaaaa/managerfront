@@ -182,7 +182,9 @@ const initAdminMenu = (router, store) => {
   if (store.state.adminMenus.length > 0) {
     return
   }
-  axios.get('/menu').then(resp => {
+  axios.get('/menu',{
+    'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
+  }).then(resp => {
     if (resp && resp.status === 200) {
       console.log(resp)
       var fmtRoutes = formatRoutes(resp.data.result)
