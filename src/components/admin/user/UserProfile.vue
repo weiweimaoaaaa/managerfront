@@ -50,15 +50,16 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="id"
-          label="id"
+          prop="idCard"
+          label="idCard"
           sortable
-          width="100">
+          width="200">
         </el-table-column>
         <el-table-column
           prop="username"
           label="用户名"
-          fit>
+          fit
+          width="100">
         </el-table-column>
         <el-table-column
           prop="name"
@@ -143,6 +144,7 @@
           var _this = this
           this.$axios.get('/admin/user').then(resp => {
             if (resp && resp.data.code === 200) {
+              console.log(resp)
               _this.users = resp.data.result
             }
           })
@@ -188,9 +190,9 @@
           this.$axios.put('/admin/user', {
             username: user.username,
             name: user.name,
-            phone: user.phone,
-            email: user.email,
             roles: roles
+          },{
+            'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
           }).then(resp => {
             if (resp && resp.data.code === 200) {
               this.$alert('用户信息修改成功')

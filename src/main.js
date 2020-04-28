@@ -128,7 +128,7 @@ Vue.prototype.$message = Message
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
 // 使请求带上凭证信息
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -138,11 +138,11 @@ router.beforeEach((to, from, next) => {
     if (store.state.username && to.path.startsWith('/admin')) {
       initAdminMenu(router, store)
     }
-    if (store.state.username && to.path.startsWith('/login')) {
-      next({
-        name: 'Dashboard'
-      })
-    }
+   // if (store.state.username && to.path.startsWith('/login')) {
+     // next({
+       // name: 'Dashboard'
+      //})
+    //}
     // 如果前端没有登录信息则直接拦截，如果有则判断后端是否正常登录（防止构造参数绕过）
     if (to.meta.requireAuth) {
       if (store.state.username) {
@@ -164,18 +164,18 @@ router.beforeEach((to, from, next) => {
 )
 
 // http response 拦截器
-axios.interceptors.response.use(
-  response => {
-    return response
-  },
-  error => {
-    if (error) {
-      store.commit('logout')
-      router.replace('/login')
-    }
-    // 返回接口返回的错误信息
-    return Promise.reject(error)
-  })
+// axios.interceptors.response.use(
+//   response => {
+//     return response
+//   },
+//   error => {
+//     if (error) {
+//       store.commit('logout')
+//       router.replace('/login')
+//     }
+//     // 返回接口返回的错误信息
+//     return Promise.reject(error)
+//   })
 
 const initAdminMenu = (router, store) => {
   // 防止重复触发加载菜单操作
@@ -184,9 +184,14 @@ const initAdminMenu = (router, store) => {
   }
   axios.get('/menu').then(resp => {
     if (resp && resp.status === 200) {
+      console.log(resp)
       var fmtRoutes = formatRoutes(resp.data.result)
       router.addRoutes(fmtRoutes)
       store.commit('initAdminMenu', fmtRoutes)
+    }
+    else
+    {
+      console.log(resp)
     }
   })
 }
