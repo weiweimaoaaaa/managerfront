@@ -184,7 +184,9 @@ const initAdminMenu = (router, store) => {
   }
   axios.get('/menu',{
     'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
-  }).then(resp => {
+  },{
+    withCredentials: true // 设置运行跨域操作
+  },  ).then(resp => {
     if (resp && resp.status === 200) {
       console.log(resp)
       var fmtRoutes = formatRoutes(resp.data.result)

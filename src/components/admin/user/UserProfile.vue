@@ -142,7 +142,9 @@
       methods: {
         listUsers () {
           var _this = this
-          this.$axios.get('/admin/user').then(resp => {
+          this.$axios.get('/admin/user',{
+            withCredentials: true // 设置运行跨域操作
+          },  ).then(resp => {
             if (resp && resp.data.code === 200) {
               console.log(resp)
               _this.users = resp.data.result
@@ -151,7 +153,9 @@
         },
         listRoles () {
           var _this = this
-          this.$axios.get('/admin/role').then(resp => {
+          this.$axios.get('/admin/role',{
+            withCredentials: true // 设置运行跨域操作
+          }).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.roles = resp.data.result
             }
