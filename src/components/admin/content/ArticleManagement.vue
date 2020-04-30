@@ -3,79 +3,90 @@
     <el-row style="margin: 18px 0px 0px 18px ">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/admin/dashboard' }">管理中心</el-breadcrumb-item>
-        <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-        <el-breadcrumb-item>文章管理</el-breadcrumb-item>
+        <el-breadcrumb-item>人员管理</el-breadcrumb-item>
+        <el-breadcrumb-item>物资管理</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
-    <el-link href="/admin/content/editor" :underline="false" target="_blank" class="add-link">
-      <el-button type="success">写文章</el-button>
-    </el-link>
-    <el-card style="margin: 18px 2%;width: 95%">
+   <el-card>
+   <el-form :model="thingsnum" >
+     <el-form-item label="卫生纸" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num1" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="牙膏" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num2" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="洗发液" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num3" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="沐浴露" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num4" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="消毒液" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num5" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="酒精" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num6" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="棉签" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num7" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="999感冒灵" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num8" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="板蓝根" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num9" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="布洛芬胶囊" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num10" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="米" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num11" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="盐" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num12" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="油" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num13" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="萝卜" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num14" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="白菜" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num15" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="辣椒酱" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num16" style="width: 100px"></el-input>
+     </el-form-item>
+     <el-form-item label="茄子" :label-width="formLabelWidth">
+       <el-input readonly v-model="thingsnum.num17" style="width: 100px"></el-input>
+     </el-form-item>
+
+   </el-form>
+     <el-button @click="seeview">查看今日物资申请</el-button>
+   </el-card>
+
+    <el-dialog
+      title="今日申请物资"
+      style="text-align:left !important"
+      :visible.sync="dialog3Visible"
+      :before-close="handleClose"
+    >
       <el-table
-        :data="articles"
-        stripe
+        :data="materalList"
+        border
         style="width: 100%"
-        :max-height="tableHeight">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline>
-              <el-form-item>
-                <span>{{ props.row.articleAbstract }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="articleTitle"
-          label="题目（展开查看摘要）"
-          fit>
-        </el-table-column>
-        <el-table-column
-          prop="articleDate"
-          label="发布日期"
-          width="200">
-        </el-table-column>
-        <el-table-column
-          fixed="right"
-          label="操作"
-          width="180">
-          <template slot-scope="scope">
-            <el-button
-              @click.native.prevent="viewArticle(scope.row.id)"
-              type="text"
-              size="small">
-              查看
-            </el-button>
-            <el-button
-              @click.native.prevent="editArticle(scope.row)"
-              type="text"
-              size="small">
-              编辑
-            </el-button>
-            <el-button
-              @click.native.prevent="deleteArticle(scope.row.id)"
-              type="text"
-              size="small">
-              移除
-            </el-button>
-          </template>
-        </el-table-column>
+        stripe
+        ref="multipleTable"
+        tooltip-effect="dark"
+      >
+        <el-table-column prop="user" label="身份证号" width="150px"></el-table-column>
+        <el-table-column prop="applyDate" label="申请日期" width="150px"></el-table-column>
+        <el-table-column prop="category" label="物资分类" width="150px"></el-table-column>
+        <el-table-column prop="name" label="物资姓名" width="150px"></el-table-column>
+        <el-table-column prop="number" label="物资数量" width="150px"></el-table-column>
       </el-table>
-      <div style="margin: 20px 0 50px 0">
-        <el-pagination
-          background
-          style="float:right;"
-          layout="total, prev, pager, next, jumper"
-          @current-change="handleCurrentChange"
-          :page-size="pageSize"
-          :total="total">
-        </el-pagination>
-      </div>
-    </el-card>
+      <el-button type="primary" @click="dialog3Visible = false">取消</el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -84,79 +95,73 @@
     name: 'ArticleManagement',
     data () {
       return {
-        articles: [],
-        pageSize: 10,
-        total: 0
+        thingsnum:{
+          num1:1,
+          num2:2,
+          num3:3,
+          num4:4,
+          num5:6,
+          num6:6,
+          num7:6,
+          num8:6,
+          num9:6,
+          num10:6,
+          num11:6,
+          num12:6,
+          num13:6,
+          num14:6,
+          num15:6,
+          num16:6,
+          num17:0,
+        },
+        formLabelWidth: '120px',
+        materalList:[],
+        dialog3Visible:false,
       }
     },
     mounted () {
-      this.loadArticles()
+      this.getmateralList();
     },
-    computed: {
-      tableHeight () {
-        return window.innerHeight - 320
-      }
-    },
-    methods: {
-      loadArticles () {
-        var _this = this
-        this.$axios.get('/article/' + this.pageSize + '/1').then(resp => {
-          if (resp && resp.data.code === 200) {
-            _this.articles = resp.data.result.content
-            _this.total = resp.data.result.totalElements
+    methods:{
+      handleClose(done) {
+        done();
+      },
+      seeview(){
+        this.dialog3Visible=true;
+      },
+      async getmateralList() {
+        this.$axios({
+          method:'post',
+          url:'/materialInfoList',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
+          },
+        }).then(res=> {
+            console.log(res)
+           this.materalList=res.data.result[0]
+           this.thingsnum.num1=res.data.result[1][0];
+           this.thingsnum.num2=res.data.result[1][1]
+          this.thingsnum.num3=res.data.result[1][2]
+          this.thingsnum.num4=res.data.result[1][3]
+          this.thingsnum.num5=res.data.result[1][4]
+          this.thingsnum.num6=res.data.result[1][5]
+          this.thingsnum.num7=res.data.result[1][6]
+          this.thingsnum.num8=res.data.result[1][7]
+          this.thingsnum.num9=res.data.result[1][8]
+          this.thingsnum.num10=res.data.result[1][9]
+          this.thingsnum.num11=res.data.result[1][10]
+          this.thingsnum.num12=res.data.result[1][11]
+          this.thingsnum.num13=res.data.result[1][12]
+          this.thingsnum.num14=res.data.result[1][13]
+          this.thingsnum.num15=res.data.result[1][14]
+          this.thingsnum.num16=res.data.result[1][15]
+          this.thingsnum.num17=res.data.result[1][16]
+
           }
+        ) .catch(err=>{
+
         })
       },
-      handleCurrentChange (page) {
-        var _this = this
-        this.$axios.get('/article/' + this.pageSize + '/' + page).then(resp => {
-          if (resp && resp.data.code === 200) {
-            _this.articles = resp.data.result.content
-            _this.total = resp.data.result.totalElements
-          }
-        })
-      },
-      viewArticle (id) {
-        let articleUrl = this.$router.resolve(
-          {
-            path: '../../jotter/article',
-            query: {
-              id: id
-            }
-          }
-        )
-        window.open(articleUrl.href, '_blank')
-      },
-      editArticle (article) {
-        this.$router.push(
-          {
-            name: 'Editor',
-            params: {
-              article: article
-            }
-          }
-        )
-      },
-      deleteArticle (id) {
-        this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            this.$axios
-              .delete('/admin/content/article/' + id).then(resp => {
-              if (resp && resp.data.code === 200) {
-                this.loadArticles()
-              }
-            })
-          }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      }
     }
   }
 </script>

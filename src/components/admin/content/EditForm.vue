@@ -30,7 +30,7 @@
         <el-form-item label="是否疑似或者确诊" :label-width="formLabelWidth" prop="diagnose">
         <el-select v-model="form.diagnose" placeholder="请选择">
           <el-option label="是" value="是"></el-option>
-          <el-option label="否" value="是"></el-option>
+          <el-option label="否" value="否"></el-option>
         </el-select>
         </el-form-item>
         <el-form-item label="来访人姓名" :label-width="formLabelWidth" prop="accessObject">
@@ -56,6 +56,7 @@
         date:'',
         time:'',
         dialogFormVisible: false,
+        addflag:false,
         form: {
           name: '',
           date: '',

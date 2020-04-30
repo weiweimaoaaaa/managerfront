@@ -59,7 +59,7 @@
               编辑
             </el-button>
             <el-button
-              @click.native.prevent="deleteBook(scope.row.idcard)"
+              @click.native.prevent="deleteBook(scope)"
               type="text"
               size="small">
               移除
@@ -104,14 +104,22 @@
       }
     },
     methods: {
-      deleteBook (id) {
+      deleteBook (row) {
         this.$confirm('此操作将永久删除该外放人员, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            this.$axios
-              .post('/deleteVisitorInfo', {id: id}).then(resp => {
+            this.$axios({
+              method:'post',
+              url:'/deleteVisitorInfo',
+              data:JSON.stringify(
+                row
+              ),
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',//设置请求头请求格式为JSON
+              },
+            }).then(resp => {
               if (resp && resp.data.code === 200) {
                 this.loadBooks()
               }
@@ -126,6 +134,7 @@
       },
       editBook (item) {
         this.$refs.edit.dialogFormVisible = true
+        this.$refs.edit.addflag=true
         this.$refs.edit.form = {
           name: item.name,
           date: item.date,
